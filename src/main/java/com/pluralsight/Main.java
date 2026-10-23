@@ -6,6 +6,7 @@ public class Main {
 
     static Scanner scanner=new Scanner(System.in);
     static List<Vehicle> vehicleList=new ArrayList<>();
+    static int vehicleIndexKey=0;
 
     static String[] questionList = {"What is the vehicleId?", "What is the makeModel?",
             "Who is the color?", "What is the odometerReading?", "what is the price?"};
@@ -14,7 +15,16 @@ public class Main {
     public static void main(String[] args) {
         addVehicleToList(101121, "Ford Explorer",
                 "Red", 45000,13500);
-
+        addVehicleToList(101122,"Toyota Camry",
+                "Blue",60000,11000);
+        addVehicleToList(101123,"Chevrolet Malibu",
+                "Black",50000,9700);
+        addVehicleToList(101124,"Honda Civic",
+                "White",70000,7500);
+        addVehicleToList(101125,"Subaru Outback",
+                "Green",55000,14500);
+        addVehicleToList(101126,"Jeep Wrangler",
+                "Yellow",30000,16000);
         startMenu();
     }
 
@@ -88,6 +98,7 @@ public class Main {
                 
                 """);
                 printVehicleStats(forloopindex);
+                vehicleIndexKey=forloopindex;
                 foundVehicle = true;
                 break;
             }
@@ -104,7 +115,7 @@ public class Main {
 
         boolean foundVehicle = false;
         String enteredVehicleStat = scanner.nextLine().trim();
-        int forloopindex=0;
+        int forLoopIndex=0;
 
         for (Vehicle vehicle: vehicleList){
             if (vehicle.getMakeModel().equals(enteredVehicleStat)){
@@ -113,11 +124,12 @@ public class Main {
                 *==== Found Vehicle ====*
                 
                 """);
-                printVehicleStats(forloopindex);
+                printVehicleStats(forLoopIndex);
+                vehicleIndexKey=forLoopIndex;
                 foundVehicle = true;
                 break;
             }
-            forloopindex++;
+            forLoopIndex++;
         }
         if (!foundVehicle){
             print(" *==== No Vehicle Found ====* ");
@@ -140,6 +152,7 @@ public class Main {
                 
                 """);
                 printVehicleStats(forloopindex);
+                vehicleIndexKey=forloopindex;
                 foundVehicle = true;
                 break;
             }
@@ -157,7 +170,7 @@ public class Main {
         boolean foundVehicle = false;
         int enteredVehicleStat = scanner.nextInt();
         scanner.nextLine();
-        int forloopindex=0;
+        int forLoopIndex=0;
 
         for (Vehicle vehicle: vehicleList){
             if (vehicle.getOdometerReading() == enteredVehicleStat){
@@ -166,11 +179,12 @@ public class Main {
                 *==== Found Vehicle ====*
                 
                 """);
-                printVehicleStats(forloopindex);
+                printVehicleStats(forLoopIndex);
+                vehicleIndexKey=forLoopIndex;
                 foundVehicle = true;
                 break;
             }
-            forloopindex++;
+            forLoopIndex++;
         }
         if (!foundVehicle){
             print(" *==== No Vehicle Found ====* ");
@@ -194,6 +208,7 @@ public class Main {
                 
                 """);
                 printVehicleStats(forloopindex);
+                vehicleIndexKey=forloopindex;
                 foundVehicle = true;
                 break;
             }
@@ -205,7 +220,7 @@ public class Main {
         searcherRequestMenu();
     }
 
-    private static void auditVehicleData() {
+    private static void auditDataMenu() {
         print("""
                 
                 *==== Audit Vehicle Menu ====*
@@ -219,6 +234,77 @@ public class Main {
                 
                 Please enter your response here->:"""+" ");
 
+        String resultEntered=scanner.nextLine().toLowerCase().trim();
+        boolean isInvalid=true;
+
+        String[] queryList={"vid", "mmd", "clr", "omr", "pr", "r", "return",
+                "vehicleId", "makeModel", "color", "odometerReading", "price"};
+
+        for (String query: queryList) {
+            if (resultEntered.equals(query)) {
+                isInvalid=false;
+                break;
+            }
+        }
+        if (isInvalid) {
+            print("Error Invalid request found. Please enter a valid item.");
+           auditDataMenu();
+        } else {
+            editVehicleData();
+        }
+    }
+
+    private static void editVehicleData() {
+        for (int i = 0; i <= 4; i++) {
+            if (i != vehicleIndexKey) continue;
+            switch (i) {
+                case (0) -> setVehicleId();
+                case (1) -> setMakeModel();
+                case (2) -> setColor();
+                case (3) -> setOdometerReading();
+                case (4) -> setPrice();
+            }
+            break;
+        }
+    }
+
+    private static void setVehicleId(){
+        print(String.format("""
+                 %s: %s
+                 | please change here ->:
+                """, phoneStatList[0], ""+vehicleList.get(vehicleIndexKey).getVehicleId()));
+        long answerInput = scanner.nextInt();
+        vehicleList.get(vehicleIndexKey).setVehicleId(answerInput);
+        scanner.nextLine();
+        auditDataMenu();
+    }
+
+    private static void setMakeModel(){
+        String answerInput = scanner.nextLine();
+        vehicleList.get(vehicleIndexKey).setMakeModel(answerInput);
+        scanner.nextLine();
+        auditDataMenu();
+    }
+
+    private static void setColor(){
+        String answerInput = scanner.nextLine();
+        vehicleList.get(vehicleIndexKey).setColor(answerInput);
+        scanner.nextLine();
+        auditDataMenu();
+    }
+
+    private static void setOdometerReading(){
+        int answerInput = scanner.nextInt();
+        vehicleList.get(vehicleIndexKey).setOdometerReading(answerInput);
+        scanner.nextLine();
+        auditDataMenu();
+    }
+
+    private static void setPrice(){
+        long answerInput = scanner.nextInt();
+        vehicleList.get(vehicleIndexKey).setPrice(answerInput);
+        scanner.nextLine();
+        auditDataMenu();
     }
 
     private static void searcherRequestMenu() {
@@ -238,7 +324,7 @@ public class Main {
         switch (stringInput) {
             case ("s"), ("search") -> searchVehicleMenu();
             case ("e"), ("end") -> print("program has ended");
-            case ("a"), ("audit") -> {}
+            case ("a"), ("audit") -> {auditDataMenu();}
             case ("r"), ("add") -> startMenu();
             default -> {
                 print(String.format("Please enter a valid Input %n"));
