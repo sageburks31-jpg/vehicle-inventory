@@ -27,7 +27,6 @@ public class Main {
                 "Yellow",30000,16000);
         startMenu();
     }
-
     public static void startMenu() {
         print("""
                 
@@ -104,12 +103,8 @@ public class Main {
             }
             forloopindex++;
         }
-        if (!foundVehicle){
-            print(" *==== No Vehicle Found ====* ");
-        }
-        searcherRequestMenu();
+        findVehicleResult(foundVehicle);
     }
-
     private static void searchMakeModel() {
         print("please enter " + phoneStatList[1] + " here ->: ");
 
@@ -131,12 +126,8 @@ public class Main {
             }
             forLoopIndex++;
         }
-        if (!foundVehicle){
-            print(" *==== No Vehicle Found ====* ");
-        }
-        searcherRequestMenu();
+        findVehicleResult(foundVehicle);
     }
-
     private static void searchColor() {
         print("please enter " + phoneStatList[3] + " here ->: ");
 
@@ -158,12 +149,8 @@ public class Main {
             }
             forloopindex++;
         }
-        if (!foundVehicle){
-            print(" *==== No Vehicle Found ====* ");
-        }
-        searcherRequestMenu();
+        findVehicleResult(foundVehicle);
     }
-
     private static void searchOdometerReading() {
         print("please enter " + phoneStatList[3] + " here ->: ");
 
@@ -186,12 +173,8 @@ public class Main {
             }
             forLoopIndex++;
         }
-        if (!foundVehicle){
-            print(" *==== No Vehicle Found ====* ");
-        }
-        searcherRequestMenu();
+        findVehicleResult(foundVehicle);
     }
-
     private static void searchPrice() {
         print("please enter " + phoneStatList[4] + " here ->: ");
 
@@ -214,10 +197,14 @@ public class Main {
             }
             forloopindex++;
         }
+        findVehicleResult(foundVehicle);
+    }
+
+    private static void findVehicleResult(boolean foundVehicle){
         if (!foundVehicle){
             print(" *==== No Vehicle Found ====* ");
-        }
-        searcherRequestMenu();
+            searchVehicleMenu();
+        } else {auditDataMenu();}
     }
 
     private static void auditDataMenu() {
@@ -235,76 +222,87 @@ public class Main {
                 Please enter your response here->:"""+" ");
 
         String resultEntered=scanner.nextLine().toLowerCase().trim();
-        boolean isInvalid=true;
 
-        String[] queryList={"vid", "mmd", "clr", "omr", "pr", "r", "return",
-                "vehicleId", "makeModel", "color", "odometerReading", "price"};
-
-        for (String query: queryList) {
-            if (resultEntered.equals(query)) {
-                isInvalid=false;
-                break;
+        switch (resultEntered) {
+            case ("vid"),("vehicleid")->editVehicleData(0);
+            case ("mmd"),("makemodel")->editVehicleData(1);
+            case ("clr"),("color")->editVehicleData(2);
+            case ("omr"),("odometerreading")->editVehicleData(3);
+            case ("pr"),("price")->editVehicleData(4);
+            case ("r"),("return")->startMenu();
+            default -> {
+                print("Error Invalid request found. Please enter a valid item.");
+                auditDataMenu();
             }
-        }
-        if (isInvalid) {
-            print("Error Invalid request found. Please enter a valid item.");
-           auditDataMenu();
-        } else {
-            editVehicleData();
         }
     }
 
-    private static void editVehicleData() {
-        for (int i = 0; i <= 4; i++) {
-            if (i != vehicleIndexKey) continue;
-            switch (i) {
-                case (0) -> setVehicleId();
-                case (1) -> setMakeModel();
-                case (2) -> setColor();
-                case (3) -> setOdometerReading();
-                case (4) -> setPrice();
+    private static void editVehicleData(int query) {
+        switch (query) {
+            case (0) -> setVehicleId();
+            case (1) -> setMakeModel();
+            case (2) -> setColor();
+            case (3) -> setOdometerReading();
+            case (4) -> setPrice();
+            default -> {
+                print("Error! item not found. queryIndex entered: "+query);
+                startMenu();
             }
-            break;
         }
     }
 
     private static void setVehicleId(){
         print(String.format("""
                  %s: %s
-                 | please change here ->:
-                """, phoneStatList[0], ""+vehicleList.get(vehicleIndexKey).getVehicleId()));
+                 | please change here ->:""" + " "
+                , phoneStatList[0], ""+vehicleList.get(vehicleIndexKey).getVehicleId()));
         long answerInput = scanner.nextInt();
         vehicleList.get(vehicleIndexKey).setVehicleId(answerInput);
         scanner.nextLine();
-        auditDataMenu();
+        printVehicleStats(vehicleIndexKey);
+        searcherRequestMenu();
     }
-
     private static void setMakeModel(){
+        print(String.format("""
+                 %s: %s
+                 | please change here ->:""" + " ",
+                phoneStatList[1], vehicleList.get(vehicleIndexKey).getMakeModel()));
         String answerInput = scanner.nextLine();
         vehicleList.get(vehicleIndexKey).setMakeModel(answerInput);
-        scanner.nextLine();
-        auditDataMenu();
+        printVehicleStats(vehicleIndexKey);
+        searcherRequestMenu();
     }
-
     private static void setColor(){
+        print(String.format("""
+                 %s: %s
+                 | please change here ->:""" + " ",
+                phoneStatList[2], vehicleList.get(vehicleIndexKey).getColor()));
         String answerInput = scanner.nextLine();
         vehicleList.get(vehicleIndexKey).setColor(answerInput);
-        scanner.nextLine();
-        auditDataMenu();
+        printVehicleStats(vehicleIndexKey);
+        searcherRequestMenu();
     }
-
     private static void setOdometerReading(){
+        print(String.format("""
+                 %s: %s
+                 | please change here ->:""" + " ",
+                phoneStatList[3], ""+vehicleList.get(vehicleIndexKey).getOdometerReading()));
         int answerInput = scanner.nextInt();
         vehicleList.get(vehicleIndexKey).setOdometerReading(answerInput);
         scanner.nextLine();
-        auditDataMenu();
+        printVehicleStats(vehicleIndexKey);
+        searcherRequestMenu();
     }
-
     private static void setPrice(){
+        print(String.format("""
+                 %s: %s
+                 | please change here ->:"""+" ",
+                phoneStatList[4], ""+vehicleList.get(vehicleIndexKey).getPrice()));
         long answerInput = scanner.nextInt();
         vehicleList.get(vehicleIndexKey).setPrice(answerInput);
         scanner.nextLine();
-        auditDataMenu();
+        printVehicleStats(vehicleIndexKey);
+        searcherRequestMenu();
     }
 
     private static void searcherRequestMenu() {
@@ -376,7 +374,6 @@ public class Main {
     private static void print(String printString) {
         System.out.print(printString);
     }
-
     private static void printVehicleStats(int vehicleIndex) {
         print(questionList[0] + " " + vehicleList.get(vehicleIndex).getVehicleId() + String.format("%n"));
         print(questionList[1] + " " + vehicleList.get(vehicleIndex).getMakeModel() + String.format("%n"));
