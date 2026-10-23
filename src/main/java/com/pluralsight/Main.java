@@ -257,8 +257,8 @@ public class Main {
                  | please change here ->:""" + " "
                 , phoneStatList[0], ""+vehicleList.get(vehicleIndexKey).getVehicleId()));
         long answerInput = scanner.nextInt();
-        vehicleList.get(vehicleIndexKey).setVehicleId(answerInput);
         scanner.nextLine();
+        vehicleList.get(vehicleIndexKey).setVehicleId(answerInput);
         printVehicleStats(vehicleIndexKey);
         searcherRequestMenu();
     }
@@ -369,6 +369,9 @@ public class Main {
                 }
             }
         }
+        vehicleList.add(vehicle);
+        printVehicleStats(vehicleList.size() - 1);
+        startMenu();
     }
 
     private static void print(String printString) {
