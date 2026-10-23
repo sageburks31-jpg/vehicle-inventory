@@ -322,7 +322,7 @@ public class Main {
         switch (stringInput) {
             case ("s"), ("search") -> searchVehicleMenu();
             case ("e"), ("end") -> print("program has ended");
-            case ("a"), ("audit") -> {auditDataMenu();}
+            case ("a"), ("audit") -> auditDataMenu();
             case ("r"), ("add") -> startMenu();
             default -> {
                 print(String.format("Please enter a valid Input %n"));
